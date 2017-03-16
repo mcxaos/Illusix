@@ -19,7 +19,7 @@ class Recipe extends ActiveRecord
     public function rules()
     {
         return [
-            ['name', 'filter', 'filter' => 'trim'],
+          
             ['name', 'required'],
             ['name', 'string', 'min' => 2, 'max' => 255],
             ['desc', 'filter', 'filter' => 'trim'],

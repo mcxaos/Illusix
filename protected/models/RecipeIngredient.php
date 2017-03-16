@@ -19,7 +19,7 @@ class RecipeIngredient extends ActiveRecord
     public function rules()
     {
         return [
-            ['quantity', 'filter', 'filter' => 'trim'],
+          
             ['quantity', 'required'],
             ['quantity', 'string', 'min' => 2, 'max' => 255],
         ];

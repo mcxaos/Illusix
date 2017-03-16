@@ -19,7 +19,7 @@ class Ingredient extends ActiveRecord
     public function rules()
     {
         return [
-            ['name', 'filter', 'filter' => 'trim'],
+          
             ['name', 'required'],
             ['name', 'string', 'min' => 2, 'max' => 255],
         ];
@@ -73,33 +73,26 @@ class Ingredient extends ActiveRecord
     public function load($rec_id,$ing_array)
     {
         foreach ($ing_array as $key => $value) {
-            if($this->findByName($value['name']) == null){
-                $Ingredient = new Ingredient();
-                $Ingredient ->name = $value['name'];
-              if(! $Ingredient ->validate()){
-                        $this->addErrors( $Ingredient ->errors);
-                        return false;
-                }
-                 $Ingredient ->save();
-                $id =  $Ingredient ->getId();
+            
+            $id = null;
+            if( Ingredient::findByName($value['name']) != null)
+            {
+                $id = Ingredient::findByName($value['name'])->getId();
+               
             }
-            else {
-                $id =  $this->findByName($value['name'])->getId();
+            if($id == null){
+                $Ingredient = new Ingredient();
+                $Ingredient->name=$value['name'];
+                $Ingredient->save();
+                $id =   $Ingredient->getId();
             }
             
-           $RecipeIngredient = new RecipeIngredient();
-           $RecipeIngredient->quantity = $value['quantity'];
-           $RecipeIngredient->recipe_id=$rec_id;
-           $RecipeIngredient->ingredient_id=$id;
-           if( !$RecipeIngredient->validate()){
-                $this->addErrors($RecipeIngredient->errors);
-                return false;
-           }
-           else
-           {
-               return $RecipeIngredient->save();
-           } 
+            $RecipeIngredient = new RecipeIngredient();
+            $RecipeIngredient->quantity = $value['quantity'];
+            $RecipeIngredient->recipe_id=$rec_id;
+            $RecipeIngredient->ingredient_id=$id;
+            $RecipeIngredient->save();
         }
-        return true;
+        return false;
     }
 }
